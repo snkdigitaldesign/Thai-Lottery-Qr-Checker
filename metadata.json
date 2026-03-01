@@ -1,0 +1,7 @@
+{
+  "name": "Thai Lottery Checker",
+  "description": "A production-ready Thai Lottery Result Checking application with QR code scanning and admin management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
