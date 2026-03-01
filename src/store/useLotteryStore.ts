@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { create } from "zustand";
+import { supabase } from "../lib/supabase";
 
 interface Draw {
   id: string;
@@ -23,38 +23,51 @@ export const useLotteryStore = create<LotteryState>((set) => ({
   latestDraws: [],
   loading: false,
   error: null,
+
   fetchLatestDraws: async () => {
     set({ loading: true, error: null });
-    try {
-      const response = await fetch('/api/latest');
-      const data = await response.json();
-      if (response.ok) {
-        set({ latestDraws: data, loading: false });
-      } else {
-        set({ error: data.error, loading: false });
-      }
-    } catch (err: any) {
-      set({ error: err.message, loading: false });
+
+    const { data, error } = await supabase
+      .from("draws")
+      .select("*")
+      .order("draw_date", { ascending: false })
+      .limit(2);
+
+    if (error) {
+      set({ error: error.message, loading: false });
+    } else {
+      set({ latestDraws: data || [], loading: false });
     }
   },
+
   fetchAllDraws: async () => {
-    try {
-      const response = await fetch('/api/draws?limit=100');
-      const data = await response.json();
-      return data.data || [];
-    } catch (err: any) {
-      console.error('Failed to fetch all draws:', err);
-      return [];
-    }
+    const { data } = await supabase
+      .from("draws")
+      .select("*")
+      .order("draw_date", { ascending: false })
+      .limit(100);
+
+    return data || [];
   },
+
   checkResult: async (number: string, date?: string) => {
-    try {
-      const url = `/api/check?number=${number}${date ? `&date=${date}` : ''}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      return data;
-    } catch (err: any) {
-      return { error: err.message };
+    let query = supabase.from("draws").select("*");
+
+    if (date) {
+      query = query.eq("draw_date", date);
     }
+
+    const { data } = await query;
+
+    if (!data) return null;
+
+    const result = data.find((draw) =>
+      draw.first_prize === number ||
+      draw.last_two === number ||
+      draw.front_three?.includes(number) ||
+      draw.back_three?.includes(number)
+    );
+
+    return result || null;
   },
 }));
