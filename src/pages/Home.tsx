@@ -57,7 +57,7 @@ export default function Home() {
             variants={item}
             className="text-6xl md:text-8xl font-black tracking-tighter"
           >
-            ตรวจหวย
+            ตรวจหวยวันนี้ – ผลสลากล่าสุด
           </motion.h1>
           <motion.h2 
             variants={item}
