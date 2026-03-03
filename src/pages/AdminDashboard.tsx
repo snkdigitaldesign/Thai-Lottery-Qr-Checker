@@ -44,14 +44,19 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/admin/stats', {
-        headers: {
-          Authorization: `Bearer ${session?.access_token}`,
-        },
+      const { count: totalChecks } = await supabase
+        .from("check_logs")
+        .select("*", { count: "exact", head: true });
+
+      const { count: winningChecks } = await supabase
+        .from("check_logs")
+        .select("*", { count: "exact", head: true })
+        .eq("is_winner", true);
+
+      setStats({
+        total_checks: totalChecks || 0,
+        winning_checks: winningChecks || 0,
       });
-      const data = await response.json();
-      setStats(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -62,13 +67,18 @@ export default function AdminDashboard() {
   const fetchDrawByDate = async (date: string) => {
     setFetchingDraw(true);
     try {
-      const response = await fetch(`/api/draws?date=${date}&limit=1`);
-      const result = await response.json();
+      const { data, error } = await supabase
+        .from("draws")
+        .select("*")
+        .eq("draw_date", date)
+        .limit(1);
       
-      if (result.data && result.data.length > 0) {
-        const draw = result.data[0];
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        const draw = data[0];
         setFormData({
-          id: draw.id, // Set ID
+          id: draw.id,
           draw_date: draw.draw_date,
           first_prize: draw.first_prize,
           front_three: draw.front_three,
@@ -81,7 +91,6 @@ export default function AdminDashboard() {
         });
         setIsEditing(true);
       } else {
-        // Reset form but keep the date
         setFormData(prev => ({
           ...initialFormState,
           draw_date: prev.draw_date
@@ -100,16 +109,14 @@ export default function AdminDashboard() {
     setSaving(true);
     setMessage(null);
 
-    // Parse comma/space separated strings into arrays
-    const parsePrizes = (str: string, count: number) => {
-      const arr = str.split(/[,\s]+/).filter(n => n.length === 6 && /^\d+$/.test(n));
-      return arr;
+    const parsePrizes = (str: string) => {
+      return str.split(/[,\s]+/).filter(n => n.length === 6 && /^\d+$/.test(n));
     };
 
-    const second = parsePrizes(formData.second_prize, 5);
-    const third = parsePrizes(formData.third_prize, 10);
-    const fourth = parsePrizes(formData.fourth_prize, 50);
-    const fifth = parsePrizes(formData.fifth_prize, 100);
+    const second = parsePrizes(formData.second_prize);
+    const third = parsePrizes(formData.third_prize);
+    const fourth = parsePrizes(formData.fourth_prize);
+    const fifth = parsePrizes(formData.fifth_prize);
 
     if (second.length > 5 || third.length > 10 || fourth.length > 50 || fifth.length > 100) {
       setMessage({ 
@@ -121,33 +128,26 @@ export default function AdminDashboard() {
     }
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/admin/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
+      const { error } = await supabase
+        .from("draws")
+        .upsert({
+          draw_date: formData.draw_date,
+          first_prize: formData.first_prize,
+          front_three: formData.front_three,
+          back_three: formData.back_three,
+          last_two: formData.last_two,
           second_prize: second,
           third_prize: third,
           fourth_prize: fourth,
           fifth_prize: fifth,
-        }),
-      });
+        }, { onConflict: "draw_date" });
 
-      const data = await response.json().catch(() => null);
-      
-      if (response.ok && data) {
-        setMessage({ type: 'success', text: 'บันทึกข้อมูลเรียบร้อยแล้ว!' });
-        fetchStats(); // Refresh stats
-      } else {
-        const errorMsg = data?.error || `เกิดข้อผิดพลาด (Status: ${response.status})`;
-        setMessage({ type: 'error', text: errorMsg });
-      }
+      if (error) throw error;
+
+      setMessage({ type: 'success', text: 'บันทึกข้อมูลเรียบร้อยแล้ว!' });
+      fetchStats();
     } catch (err: any) {
-      setMessage({ type: 'error', text: `ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้: ${err.message}` });
+      setMessage({ type: 'error', text: `เกิดข้อผิดพลาด: ${err.message}` });
     } finally {
       setSaving(false);
     }
@@ -406,39 +406,18 @@ export default function AdminDashboard() {
                   setIsDeleting(false);
                   setSaving(true);
                   try {
-                    console.log('[Admin] Getting session...');
-                    const { data: { session } } = await supabase.auth.getSession();
-                    console.log('[Admin] Session status:', session ? 'Active' : 'Missing');
-                    
-                    if (!session) {
-                      alert('กรุณาเข้าสู่ระบบใหม่');
-                      return;
-                    }
+                    const { error } = await supabase
+                      .from("draws")
+                      .delete()
+                      .eq("id", formData.id);
 
-                    console.log('[Admin] Sending POST request to /api/admin/delete');
-                    const response = await fetch('/api/admin/delete', {
-                      method: 'POST',
-                      headers: {
-                        'Authorization': `Bearer ${session.access_token}`,
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ id: formData.id, date: formData.draw_date }),
-                    });
+                    if (error) throw error;
 
-                    console.log('[Admin] Response status:', response.status);
-                    const responseData = await response.json().catch(() => ({}));
-                    console.log('[Admin] Response data:', responseData);
-
-                    if (response.ok) {
-                      console.log('[Admin] Delete successful');
-                      setMessage({ type: 'success', text: 'ลบข้อมูลเรียบร้อยแล้ว' });
-                      setFormData({ ...initialFormState, draw_date: formData.draw_date });
-                      setIsEditing(false);
-                      fetchStats();
-                    } else {
-                      const errorMsg = responseData.error || `เกิดข้อผิดพลาด (Status: ${response.status})`;
-                      setMessage({ type: 'error', text: errorMsg });
-                    }
+                    console.log('[Admin] Delete successful');
+                    setMessage({ type: 'success', text: 'ลบข้อมูลเรียบร้อยแล้ว' });
+                    setFormData({ ...initialFormState, draw_date: formData.draw_date });
+                    setIsEditing(false);
+                    fetchStats();
                   } catch (err: any) {
                     console.error('[Admin] Delete exception:', err);
                     setMessage({ type: 'error', text: err.message });
@@ -459,13 +438,19 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={async () => {
-                const { data: { session } } = await supabase.auth.getSession();
-                const response = await fetch('/api/admin/debug-draws', {
-                  headers: { Authorization: `Bearer ${session?.access_token}` }
-                });
-                const data = await response.json();
+                const { data, error } = await supabase
+                  .from("draws")
+                  .select("id, draw_date")
+                  .order("draw_date", { ascending: false })
+                  .limit(10);
+                
+                if (error) {
+                  console.error('[Admin Debug] Error:', error);
+                  alert('Error fetching debug data');
+                  return;
+                }
                 console.log('[Admin Debug] Draw IDs:', data);
-                alert(`Found ${data.length} draws. Check console for IDs.`);
+                alert(`Found ${data?.length || 0} draws. Check console for IDs.`);
               }}
               className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-200"
             >

@@ -29,10 +29,10 @@ export default function CheckResult() {
 
   useEffect(() => {
     const loadDraws = async () => {
-      const allDraws = await fetchAllDraws();
-      setDraws(allDraws);
-      if (allDraws.length > 0) {
-        setSelectedDate(allDraws[0].draw_date);
+      const { data } = await fetchAllDraws(1, 100);
+      setDraws(data);
+      if (data.length > 0) {
+        setSelectedDate(data[0].draw_date);
       }
     };
     loadDraws();

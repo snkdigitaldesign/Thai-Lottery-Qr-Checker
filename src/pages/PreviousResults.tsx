@@ -24,13 +24,23 @@ export default function PreviousResults() {
   const fetchDraws = async () => {
     setLoading(true);
     try {
-      const url = `/api/draws?page=${page}&limit=5${filterDate ? `&date=${filterDate}` : ''}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (response.ok) {
-        setDraws(data.data);
-        setTotalPages(data.totalPages);
+      const limit = 5;
+      const offset = (page - 1) * limit;
+      let query = supabase
+        .from("draws")
+        .select("*", { count: "exact" })
+        .order("draw_date", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (filterDate) {
+        query = query.eq("draw_date", filterDate);
       }
+
+      const { data, error, count } = await query;
+      if (error) throw error;
+
+      setDraws(data || []);
+      setTotalPages(Math.ceil((count || 0) / limit));
     } catch (error) {
       console.error('Failed to fetch draws:', error);
     } finally {
@@ -66,40 +76,19 @@ export default function PreviousResults() {
     }
 
     try {
-      console.log('[Frontend] Getting session...');
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('[Frontend] Session status:', session ? 'Active' : 'Missing');
-      
-      if (!session) {
-        alert('กรุณาเข้าสู่ระบบใหม่');
-        return;
-      }
+      const { error } = await supabase
+        .from("draws")
+        .delete()
+        .eq("id", id);
 
-      console.log('[Frontend] Sending POST request to /api/admin/delete');
-      const response = await fetch('/api/admin/delete', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, date }),
-      });
+      if (error) throw error;
 
-      console.log('[Frontend] Response status:', response.status);
-      const responseData = await response.json().catch(() => ({}));
-      console.log('[Frontend] Response data:', responseData);
-
-      if (response.ok) {
-        console.log('[Frontend] Delete successful');
-        alert('ลบข้อมูลสำเร็จ');
-        fetchDraws();
-      } else {
-        const errorMsg = responseData.error || `เกิดข้อผิดพลาด (Status: ${response.status})`;
-        alert(errorMsg);
-      }
-    } catch (error) {
+      console.log('[Frontend] Delete successful');
+      alert('ลบข้อมูลสำเร็จ');
+      fetchDraws();
+    } catch (error: any) {
       console.error('[Frontend] Delete exception:', error);
-      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+      alert(error.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
     }
   };
 
