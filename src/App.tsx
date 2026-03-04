@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { supabase } from './lib/supabase';
 import { useAuthStore } from './store/useAuthStore';
 import Navbar from './components/Navbar';
-import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
 import CheckResult from './pages/CheckResult';
 import PreviousResults from './pages/PreviousResults';
@@ -52,7 +51,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20 md:pb-0">
+      <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
         <Navbar />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <AnimatePresence mode="wait">
@@ -71,7 +70,6 @@ export default function App() {
             </Routes>
           </AnimatePresence>
         </main>
-        <BottomNav />
       </div>
     </Router>
   );

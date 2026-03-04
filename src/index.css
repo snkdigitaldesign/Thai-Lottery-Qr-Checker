@@ -5,4 +5,10 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-logo-primary: #2D8B8B;
+  --color-logo-secondary: #4FB0B0;
+  --color-logo-dark: #1E6B6B;
+  --color-logo-light: #E0F2F2;
+  --color-logo-accent: #3EB9B9;
 }
