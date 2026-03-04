@@ -8,6 +8,7 @@ import CheckResult from './pages/CheckResult';
 import PreviousResults from './pages/PreviousResults';
 import Live from './pages/Live';
 import Login from './pages/Login';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import AdminDashboard from './pages/AdminDashboard';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -61,6 +62,7 @@ export default function App() {
               <Route path="/previous" element={<PreviousResults />} />
               <Route path="/live" element={<Live />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route 
                 path="/admin" 
                 element={
