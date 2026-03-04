@@ -1,6 +1,6 @@
 {
-  "name": "Thai Lottery Checker",
-  "description": "A production-ready Thai Lottery Result Checking application with QR code scanning and admin management.",
+  "name": "ตรวจหวยวันนี้ – ผลสลากล่าสุด",
+  "description": "แอปพลิเคชันตรวจผลสลากกินแบ่งรัฐบาลล่าสุด ตรวจหวยวันนี้ สแกน QR Code และจัดการข้อมูลผลรางวัล",
   "requestFramePermissions": [
     "camera"
   ]
