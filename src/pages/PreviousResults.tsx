@@ -100,7 +100,7 @@ export default function PreviousResults() {
       className="space-y-8"
     >
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-slate-900">ผลการออกรางวัลย้อนหลัง</h1>
+        <h1 className="text-2xl font-bold text-slate-900">ผลการออกรางวัลย้อนหลัง</h1>
         <p className="text-slate-500">ตรวจสอบสถิติและผลการออกรางวัลงวดก่อนหน้า</p>
       </div>
 
@@ -116,7 +116,7 @@ export default function PreviousResults() {
             type="date"
             value={filterDate}
             onChange={handleFilterChange}
-            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary focus:border-transparent outline-none transition-all"
           />
           {filterDate && (
             <button
@@ -133,7 +133,7 @@ export default function PreviousResults() {
       <div className="space-y-6">
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-logo-primary"></div>
           </div>
         ) : draws.length > 0 ? (
           draws.map((draw) => (
@@ -145,8 +145,8 @@ export default function PreviousResults() {
             >
               <div className="bg-slate-50 px-8 py-4 border-b border-slate-100 flex justify-between items-center">
                 <div className="flex items-center space-x-3 text-slate-900 font-black">
-                  <Calendar className="h-5 w-5 text-emerald-600" />
-                  <span className="text-lg">งวดวันที่ {new Date(draw.draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                  <Calendar className="h-5 w-5 text-logo-primary" />
+                  <span className="text-base">งวดวันที่ {new Date(draw.draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
                 {user && role === 'admin' && (
                   <button
@@ -166,11 +166,11 @@ export default function PreviousResults() {
               <div className="p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
                 <div className="space-y-2">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">รางวัลที่ 1</span>
-                  <div className="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter font-display">{draw.first_prize}</div>
+                  <div className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter font-display">{draw.first_prize}</div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 bg-logo-light/30 p-4 rounded-2xl">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">เลขท้าย 2 ตัว</span>
-                  <div className="text-3xl md:text-4xl font-black text-emerald-600 tracking-tighter font-display">{draw.last_two}</div>
+                  <div className="text-2xl md:text-3xl font-black text-logo-primary tracking-tighter font-display">{draw.last_two}</div>
                 </div>
                 <div className="space-y-2">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">เลขหน้า 3 ตัว</span>

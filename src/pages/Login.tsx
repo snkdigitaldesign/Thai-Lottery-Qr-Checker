@@ -45,7 +45,7 @@ export default function Login() {
         className="bg-white rounded-[3rem] shadow-2xl p-10 md:p-12 border border-slate-100 space-y-10"
       >
         <div className="text-center space-y-4">
-          <div className="bg-emerald-500 w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500/20">
+          <div className="bg-logo-primary w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-logo-primary/20">
             <LogIn className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-3xl font-black text-slate-900 font-display">เข้าสู่ระบบแอดมิน</h1>
@@ -55,7 +55,7 @@ export default function Login() {
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-logo-primary transition-colors">
                 <Mail className="h-5 w-5" />
               </div>
               <input
@@ -63,7 +63,7 @@ export default function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-5 bg-slate-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300 font-medium"
+                className="w-full pl-12 pr-4 py-5 bg-slate-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-logo-primary/10 transition-all placeholder:text-slate-300 font-medium"
                 placeholder="อีเมลแอดมิน"
               />
             </div>
@@ -71,7 +71,7 @@ export default function Login() {
 
           <div className="space-y-2">
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-logo-primary transition-colors">
                 <Lock className="h-5 w-5" />
               </div>
               <input
@@ -79,7 +79,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-5 bg-slate-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300 font-medium"
+                className="w-full pl-12 pr-4 py-5 bg-slate-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-logo-primary/10 transition-all placeholder:text-slate-300 font-medium"
                 placeholder="รหัสผ่าน"
               />
             </div>

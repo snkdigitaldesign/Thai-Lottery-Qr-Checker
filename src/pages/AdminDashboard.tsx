@@ -160,7 +160,7 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-slate-900">แดชบอร์ดผู้ดูแลระบบ</h1>
         <div className="flex flex-col items-end">
-          <div className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <div className="bg-logo-light text-logo-dark px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             แอดมิน
           </div>
           {userEmail && <span className="text-[10px] text-slate-400 mt-1">{userEmail}</span>}
@@ -170,8 +170,8 @@ export default function AdminDashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center space-x-4">
-          <div className="bg-blue-100 p-3 rounded-2xl">
-            <BarChart3 className="h-6 w-6 text-blue-600" />
+          <div className="bg-logo-light p-3 rounded-2xl">
+            <BarChart3 className="h-6 w-6 text-logo-primary" />
           </div>
           <div>
             <span className="block text-sm font-bold text-slate-400 uppercase">จำนวนการตรวจทั้งหมด</span>
@@ -179,8 +179,8 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center space-x-4">
-          <div className="bg-emerald-100 p-3 rounded-2xl">
-            <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+          <div className="bg-logo-light p-3 rounded-2xl">
+            <CheckCircle2 className="h-6 w-6 text-logo-primary" />
           </div>
           <div>
             <span className="block text-sm font-bold text-slate-400 uppercase">จำนวนผู้ถูกรางวัล</span>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
       <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         <div className="bg-slate-900 px-8 py-4 text-white flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            {isEditing ? <History className="h-5 w-5 text-emerald-400" /> : <Plus className="h-5 w-5" />}
+            {isEditing ? <History className="h-5 w-5 text-logo-secondary" /> : <Plus className="h-5 w-5" />}
             <span className="font-bold">{isEditing ? 'แก้ไขผลการออกรางวัล' : 'บันทึกผลการออกรางวัลใหม่'}</span>
           </div>
           {fetchingDraw && <div className="text-xs animate-pulse text-slate-400">กำลังดึงข้อมูลเดิม...</div>}
@@ -207,7 +207,7 @@ export default function AdminDashboard() {
                 required
                 value={formData.draw_date}
                 onChange={(e) => setFormData({ ...formData, draw_date: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary"
               />
             </div>
             <div className="space-y-2">
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                 maxLength={6}
                 value={formData.first_prize}
                 onChange={(e) => setFormData({ ...formData, first_prize: e.target.value.replace(/\D/g, '') })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono text-xl tracking-widest"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary font-mono text-xl tracking-widest"
                 placeholder="000000"
               />
             </div>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
                     newFront[0] = e.target.value.replace(/\D/g, '');
                     setFormData({ ...formData, front_three: newFront });
                   }}
-                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-center font-mono"
+                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary text-center font-mono"
                   placeholder="000"
                 />
                 <input
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
                     newFront[1] = e.target.value.replace(/\D/g, '');
                     setFormData({ ...formData, front_three: newFront });
                   }}
-                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-center font-mono"
+                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary text-center font-mono"
                   placeholder="000"
                 />
               </div>
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
                     newBack[0] = e.target.value.replace(/\D/g, '');
                     setFormData({ ...formData, back_three: newBack });
                   }}
-                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-center font-mono"
+                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary text-center font-mono"
                   placeholder="000"
                 />
                 <input
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
                     newBack[1] = e.target.value.replace(/\D/g, '');
                     setFormData({ ...formData, back_three: newBack });
                   }}
-                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-center font-mono"
+                  className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary text-center font-mono"
                   placeholder="000"
                 />
               </div>
@@ -297,7 +297,7 @@ export default function AdminDashboard() {
                 maxLength={2}
                 value={formData.last_two}
                 onChange={(e) => setFormData({ ...formData, last_two: e.target.value.replace(/\D/g, '') })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-center font-mono text-xl"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary text-center font-mono text-xl"
                 placeholder="00"
               />
             </div>
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-bold text-slate-700">รางวัลที่ 2 (5 หมายเลข)</label>
-                <span className={`text-xs font-bold ${formData.second_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 5 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <span className={`text-xs font-bold ${formData.second_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 5 ? 'text-logo-primary' : 'text-slate-400'}`}>
                   บันทึกแล้ว: {formData.second_prize.split(/[,\s]+/).filter(n => n.length === 6).length} / 5
                 </span>
               </div>
@@ -316,7 +316,7 @@ export default function AdminDashboard() {
                 rows={2}
                 value={formData.second_prize}
                 onChange={(e) => setFormData({ ...formData, second_prize: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary font-mono"
                 placeholder="123456, 234567, ..."
               />
             </div>
@@ -324,7 +324,7 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-bold text-slate-700">รางวัลที่ 3 (10 หมายเลข)</label>
-                <span className={`text-xs font-bold ${formData.third_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 10 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <span className={`text-xs font-bold ${formData.third_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 10 ? 'text-logo-primary' : 'text-slate-400'}`}>
                   บันทึกแล้ว: {formData.third_prize.split(/[,\s]+/).filter(n => n.length === 6).length} / 10
                 </span>
               </div>
@@ -333,7 +333,7 @@ export default function AdminDashboard() {
                 rows={2}
                 value={formData.third_prize}
                 onChange={(e) => setFormData({ ...formData, third_prize: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary font-mono"
                 placeholder="123456, 234567, ..."
               />
             </div>
@@ -341,7 +341,7 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-bold text-slate-700">รางวัลที่ 4 (50 หมายเลข)</label>
-                <span className={`text-xs font-bold ${formData.fourth_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 50 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <span className={`text-xs font-bold ${formData.fourth_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 50 ? 'text-logo-primary' : 'text-slate-400'}`}>
                   บันทึกแล้ว: {formData.fourth_prize.split(/[,\s]+/).filter(n => n.length === 6).length} / 50
                 </span>
               </div>
@@ -350,7 +350,7 @@ export default function AdminDashboard() {
                 rows={4}
                 value={formData.fourth_prize}
                 onChange={(e) => setFormData({ ...formData, fourth_prize: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary font-mono"
                 placeholder="123456, 234567, ..."
               />
             </div>
@@ -358,7 +358,7 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-bold text-slate-700">รางวัลที่ 5 (100 หมายเลข)</label>
-                <span className={`text-xs font-bold ${formData.fifth_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 100 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <span className={`text-xs font-bold ${formData.fifth_prize.split(/[,\s]+/).filter(n => n.length === 6).length === 100 ? 'text-logo-primary' : 'text-slate-400'}`}>
                   บันทึกแล้ว: {formData.fifth_prize.split(/[,\s]+/).filter(n => n.length === 6).length} / 100
                 </span>
               </div>
@@ -367,7 +367,7 @@ export default function AdminDashboard() {
                 rows={6}
                 value={formData.fifth_prize}
                 onChange={(e) => setFormData({ ...formData, fifth_prize: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-logo-primary font-mono"
                 placeholder="123456, 234567, ..."
               />
             </div>
@@ -375,7 +375,7 @@ export default function AdminDashboard() {
 
           {message && (
             <div className={`p-4 rounded-xl flex items-center space-x-3 ${
-              message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-red-50 text-red-700 border border-red-100'
+              message.type === 'success' ? 'bg-logo-light text-logo-dark border border-logo-primary/20' : 'bg-red-50 text-red-700 border border-red-100'
             }`}>
               {message.type === 'success' ? <CheckCircle2 className="h-5 w-5" /> : <AlertCircle className="h-5 w-5" />}
               <span className="text-sm font-medium">{message.text}</span>

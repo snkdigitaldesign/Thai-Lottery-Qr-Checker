@@ -11,7 +11,7 @@ export default function Live() {
       className="max-w-4xl mx-auto space-y-8"
     >
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-slate-900">ถ่ายทอดสดการออกรางวัล</h1>
+        <h1 className="text-2xl font-bold text-slate-900">ถ่ายทอดสดการออกรางวัล</h1>
         <p className="text-slate-500">รับชมการถ่ายทอดสดผลการออกสลากกินแบ่งรัฐบาล</p>
       </div>
 
@@ -29,11 +29,11 @@ export default function Live() {
         </div>
         
         <div className="p-10 space-y-8">
-          <div className="flex items-start space-x-5 p-6 bg-emerald-50 border border-emerald-100 rounded-[2rem]">
-            <AlertCircle className="h-7 w-7 text-emerald-600 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start space-x-5 p-6 bg-logo-light border border-logo-primary/20 rounded-[2rem]">
+            <AlertCircle className="h-7 w-7 text-logo-primary flex-shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="font-black text-emerald-900 text-lg">ข้อมูลการถ่ายทอดสด</h3>
-              <p className="text-sm text-emerald-700 leading-relaxed font-medium">
+              <h3 className="font-black text-logo-dark text-lg">ข้อมูลการถ่ายทอดสด</h3>
+              <p className="text-sm text-logo-primary leading-relaxed font-medium">
                 การออกรางวัลสลากกินแบ่งรัฐบาลจะเริ่มถ่ายทอดสดในเวลาประมาณ 14:30 น. ของทุกวันที่ 1 และ 16 ของเดือน 
                 (หรือตามวันที่สำนักงานสลากฯ กำหนด)
               </p>

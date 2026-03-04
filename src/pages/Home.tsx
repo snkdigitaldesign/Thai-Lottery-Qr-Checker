@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLotteryStore } from '../store/useLotteryStore';
 import { motion } from 'motion/react';
-import { Calendar, Award, Hash, ArrowRight, Sparkles, TrendingUp, AlertCircle, QrCode, Search } from 'lucide-react';
+import { Calendar, Hash, ArrowRight, Sparkles, TrendingUp, AlertCircle, QrCode, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
@@ -46,39 +46,39 @@ export default function Home() {
       className="space-y-16 pb-20 bg-slate-50 min-h-screen"
     >
       {/* Hero Section - Matching Screenshot */}
-      <section className="bg-emerald-600 pt-12 pb-24 px-6 text-center text-white relative overflow-hidden">
+      <section className="bg-logo-primary pt-12 pb-24 px-6 text-center text-white relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-48 h-48 bg-emerald-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-48 h-48 bg-logo-secondary rounded-full blur-3xl"></div>
         </div>
         
         <div className="relative space-y-2">
           <motion.h1 
             variants={item}
-            className="text-6xl md:text-8xl font-black tracking-tighter"
+            className="text-3xl md:text-5xl font-black tracking-tighter"
           >
-            ตรวจหวยวันนี้ – ผลสลากล่าสุด
+            ตรวจหวยวันนี้
           </motion.h1>
           <motion.h2 
             variants={item}
-            className="text-6xl md:text-8xl font-black tracking-tighter"
+            className="text-3xl md:text-5xl font-black tracking-tighter"
           >
-            สแกนหวย
+            ผลสลากล่าสุด
           </motion.h2>
           
-          <motion.div variants={item} className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div variants={item} className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
               to="/check"
-              className="inline-flex items-center space-x-3 bg-white text-emerald-600 px-10 py-5 rounded-[2rem] font-black text-xl shadow-2xl shadow-black/10 hover:scale-105 transition-transform"
+              className="inline-flex items-center space-x-3 bg-white text-logo-primary px-8 py-4 rounded-2xl font-black text-lg shadow-2xl shadow-black/10 hover:scale-105 transition-transform"
             >
-              <QrCode className="h-7 w-7" />
+              <QrCode className="h-6 w-6" />
               <span>สแกน QR Code</span>
             </Link>
             <Link 
               to="/check?mode=multiple"
-              className="inline-flex items-center space-x-3 bg-emerald-500 text-white px-10 py-5 rounded-[2rem] font-black text-xl shadow-2xl shadow-emerald-700/20 hover:scale-105 transition-transform border-2 border-emerald-400"
+              className="inline-flex items-center space-x-3 bg-logo-secondary text-white px-8 py-4 rounded-2xl font-black text-lg shadow-2xl shadow-logo-dark/20 hover:scale-105 transition-transform border-2 border-logo-accent"
             >
-              <Search className="h-7 w-7" />
+              <Search className="h-6 w-6" />
               <span>ตรวจหลายใบ</span>
             </Link>
           </motion.div>
@@ -94,7 +94,7 @@ export default function Home() {
                 <Calendar className="h-5 w-5 text-slate-600" />
               </div>
               <div>
-                <h2 className="text-xl md:text-2xl font-black text-slate-900 font-display">
+                <h2 className="text-lg md:text-xl font-black text-slate-900 font-display">
                   งวดวันที่ {new Date(latest.draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </h2>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Official Results</p>
@@ -109,17 +109,17 @@ export default function Home() {
               className="md:col-span-8 bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden group border border-white/5"
             >
               <div className="absolute top-0 right-0 p-4 md:p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Award className="h-40 w-40 md:h-72 md:w-72 text-emerald-500" />
+                <Search className="h-40 w-40 md:h-72 md:w-72 text-white" />
               </div>
               
               <div className="relative space-y-8 md:space-y-12 text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start space-x-3">
-                  <div className="bg-emerald-500/20 px-4 py-1.5 rounded-full">
-                    <span className="text-xs md:text-sm font-black uppercase tracking-[0.3em] text-emerald-400">รางวัลที่ 1</span>
+                  <div className="bg-logo-accent/20 px-4 py-1.5 rounded-full">
+                    <span className="text-xs md:text-sm font-black uppercase tracking-[0.3em] text-logo-primary">รางวัลที่ 1</span>
                   </div>
                 </div>
                 
-                <div className="text-7xl md:text-[11rem] font-black tracking-tighter text-white font-display flex justify-center md:justify-start drop-shadow-2xl">
+                <div className="text-5xl md:text-7xl font-black tracking-tighter text-white font-display flex justify-center md:justify-start drop-shadow-2xl">
                   {latest.first_prize.split('').map((char, i) => (
                     <motion.span 
                       key={i}
@@ -139,11 +139,11 @@ export default function Home() {
                 </div>
                 
                 <div className="pt-2 md:pt-4 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6">
-                  <div className="px-8 py-3 bg-emerald-500 text-slate-900 rounded-3xl font-black text-xl md:text-2xl shadow-xl shadow-emerald-500/30">
+                  <div className="px-6 py-2.5 bg-logo-primary text-white rounded-2xl font-black text-lg md:text-xl shadow-xl shadow-logo-primary/30">
                     ฿ 6,000,000
                   </div>
                   <div className="text-slate-400 font-bold flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-logo-primary animate-pulse"></div>
                     <span>เงินรางวัลต่อใบ</span>
                   </div>
                 </div>
@@ -153,7 +153,7 @@ export default function Home() {
             {/* Last 2 Digits Card */}
             <motion.div 
               variants={item}
-              className="md:col-span-4 bg-emerald-600 rounded-[2.5rem] p-8 md:p-10 text-white flex flex-col justify-between shadow-xl shadow-emerald-100/50 text-center md:text-left relative overflow-hidden"
+              className="md:col-span-4 bg-logo-primary rounded-[2.5rem] p-8 md:p-10 text-white flex flex-col justify-between shadow-xl shadow-logo-primary/30 text-center md:text-left relative overflow-hidden"
             >
               <div className="absolute -right-4 -top-4 opacity-10">
                 <Hash className="h-32 w-32" />
@@ -163,7 +163,7 @@ export default function Home() {
                 <h3 className="text-lg md:text-xl font-black">รางวัลเลขท้าย</h3>
               </div>
               
-              <div className="text-8xl md:text-9xl font-black font-display tracking-tighter py-4 relative">
+              <div className="text-6xl md:text-7xl font-black font-display tracking-tighter py-4 relative">
                 {latest.last_two}
               </div>
               
@@ -187,7 +187,7 @@ export default function Home() {
               <div className="flex justify-around items-center">
                 {latest.front_three.map((num, i) => (
                   <div key={i} className="text-center space-y-1 md:space-y-2">
-                    <div className="text-4xl md:text-6xl font-black text-slate-800 font-display tracking-tight">
+                    <div className="text-3xl md:text-5xl font-black text-slate-800 font-display tracking-tight">
                       {num}
                     </div>
                     <div className="text-[8px] md:text-[10px] font-bold text-slate-300 uppercase">ชุดที่ {i + 1}</div>
@@ -212,7 +212,7 @@ export default function Home() {
               <div className="flex justify-around items-center">
                 {latest.back_three.map((num, i) => (
                   <div key={i} className="text-center space-y-1 md:space-y-2">
-                    <div className="text-4xl md:text-6xl font-black text-slate-800 font-display tracking-tight">
+                    <div className="text-3xl md:text-5xl font-black text-slate-800 font-display tracking-tight">
                       {num}
                     </div>
                     <div className="text-[8px] md:text-[10px] font-bold text-slate-300 uppercase">ชุดที่ {i + 1}</div>
@@ -235,7 +235,7 @@ export default function Home() {
             className="bg-slate-900 rounded-[2rem] p-8 text-white flex flex-col md:flex-row items-center justify-between gap-8"
           >
             <div className="space-y-1 text-center md:text-left">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">งวดก่อนหน้า</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-logo-primary">งวดก่อนหน้า</span>
               <h3 className="text-xl font-bold font-display">
                 {new Date(previous.draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}
               </h3>
@@ -249,7 +249,7 @@ export default function Home() {
               <div className="h-8 w-px bg-slate-800"></div>
               <div className="text-center">
                 <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">เลขท้าย 2 ตัว</span>
-                <span className="text-2xl md:text-3xl font-black font-display tracking-tight text-emerald-400">{previous.last_two}</span>
+                <span className="text-2xl md:text-3xl font-black font-display tracking-tight text-logo-primary">{previous.last_two}</span>
               </div>
             </div>
             

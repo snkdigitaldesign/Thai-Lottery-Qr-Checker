@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useLotteryStore } from '../store/useLotteryStore';
 import { motion } from 'motion/react';
 import { Search, Camera, X, CheckCircle2, AlertCircle, RefreshCw, QrCode, ChevronDown, Plus, Minus } from 'lucide-react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 
 export default function CheckResult() {
   const [searchParams] = useSearchParams();
@@ -106,54 +106,59 @@ export default function CheckResult() {
     }
   };
 
-  const startScanner = () => {
+  const startScanner = async () => {
     setShowScanner(true);
     setResult(null);
     setError(null);
     
-    setTimeout(() => {
+    // Give time for the modal and the "reader" div to mount
+    setTimeout(async () => {
       try {
-        const scanner = new Html5QrcodeScanner(
-          "reader",
-          { 
-            fps: 10, 
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0
-          },
-          /* verbose= */ false
-        );
-        
-        scanner.render((decodedText) => {
-          const urlParams = new URLSearchParams(decodedText.split('?')[1]);
-          const qrNumber = urlParams.get('number') || decodedText.match(/\d{6}/)?.[0];
-          
-          if (qrNumber && qrNumber.length === 6) {
-            setNumber(qrNumber);
-            scanner.clear().then(() => {
-              setShowScanner(false);
+        const html5QrCode = new Html5Qrcode("reader");
+        scannerRef.current = html5QrCode;
+
+        const config = { 
+          fps: 10, 
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.0
+        };
+
+        await html5QrCode.start(
+          { facingMode: "environment" }, 
+          config,
+          (decodedText) => {
+            const urlParams = new URLSearchParams(decodedText.split('?')[1]);
+            const qrNumber = urlParams.get('number') || decodedText.match(/\d{6}/)?.[0];
+            
+            if (qrNumber && qrNumber.length === 6) {
+              setNumber(qrNumber);
+              stopScanner();
               handleCheck(undefined, qrNumber);
-            }).catch(err => {
-              console.error("Failed to clear scanner", err);
-              setShowScanner(false);
-            });
+            }
+          },
+          (errorMessage) => {
+            // Scanning...
           }
-        }, (err) => {
-          // Scanning...
-        });
-        scannerRef.current = scanner;
+        );
       } catch (err) {
         console.error("Scanner init error", err);
-        setError("ไม่สามารถเปิดกล้องได้ กรุณาตรวจสอบการอนุญาตสิทธิ์");
+        setError("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตสิทธิ์การใช้กล้อง");
         setShowScanner(false);
       }
-    }, 300);
+    }, 500);
   };
 
-  const stopScanner = () => {
-    if (scannerRef.current) {
-      scannerRef.current.clear();
+  const stopScanner = async () => {
+    if (scannerRef.current && scannerRef.current.isScanning) {
+      try {
+        await scannerRef.current.stop();
+        scannerRef.current.clear();
+      } catch (err) {
+        console.error("Failed to stop scanner", err);
+      }
     }
     setShowScanner(false);
+    scannerRef.current = null;
   };
 
   return (
@@ -163,14 +168,14 @@ export default function CheckResult() {
       className="min-h-screen bg-slate-50 pb-20"
     >
       {/* Green Header */}
-      <div className="bg-emerald-600 pt-12 pb-24 px-6 text-center text-white">
-        <h1 className="text-5xl font-black mb-2 tracking-tight">ตรวจหวย</h1>
+      <div className="bg-logo-primary pt-10 pb-20 px-6 text-center text-white">
+        <h1 className="text-3xl font-black mb-2 tracking-tight">ตรวจหวยวันนี้</h1>
         <div className="flex justify-center mt-6">
           <div className="bg-white/20 p-1 rounded-2xl backdrop-blur-md flex">
             <button
               onClick={() => setMode('single')}
               className={`px-6 py-2 rounded-xl text-sm font-black transition-all ${
-                mode === 'single' ? 'bg-white text-emerald-600 shadow-lg' : 'text-white hover:bg-white/10'
+                mode === 'single' ? 'bg-white text-logo-primary shadow-lg' : 'text-white hover:bg-white/10'
               }`}
             >
               ใบเดียว
@@ -178,7 +183,7 @@ export default function CheckResult() {
             <button
               onClick={() => setMode('multiple')}
               className={`px-6 py-2 rounded-xl text-sm font-black transition-all ${
-                mode === 'multiple' ? 'bg-white text-emerald-600 shadow-lg' : 'text-white hover:bg-white/10'
+                mode === 'multiple' ? 'bg-white text-logo-primary shadow-lg' : 'text-white hover:bg-white/10'
               }`}
             >
               หลายใบ
@@ -194,12 +199,12 @@ export default function CheckResult() {
             animate={{ opacity: 1, y: 0 }}
             whileTap={{ scale: 0.98 }}
             onClick={startScanner}
-            className="w-full bg-white border-2 border-emerald-500 rounded-[2rem] py-4 flex items-center justify-center space-x-3 shadow-xl shadow-emerald-500/10 group"
+            className="w-full bg-white border-2 border-logo-primary rounded-[2rem] py-4 flex items-center justify-center space-x-3 shadow-xl shadow-logo-primary/10 group"
           >
-            <div className="p-2 bg-emerald-50 rounded-xl group-hover:bg-emerald-100 transition-colors">
-              <QrCode className="h-6 w-6 text-emerald-600" />
+            <div className="p-2 bg-logo-light rounded-xl group-hover:bg-logo-light/80 transition-colors">
+              <QrCode className="h-6 w-6 text-logo-primary" />
             </div>
-            <span className="text-xl font-black text-emerald-600">สแกน QR Code</span>
+            <span className="text-xl font-black text-logo-primary">สแกน QR Code</span>
           </motion.button>
         )}
 
@@ -212,7 +217,7 @@ export default function CheckResult() {
                 <select
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full appearance-none bg-emerald-500 text-white font-black py-3 px-6 rounded-full text-center focus:outline-none shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  className="w-full appearance-none bg-logo-primary text-white font-black py-3 px-6 rounded-full text-center focus:outline-none shadow-lg shadow-logo-primary/20 cursor-pointer"
                 >
                   {draws.map((draw) => (
                     <option key={draw.id} value={draw.draw_date}>
@@ -238,13 +243,13 @@ export default function CheckResult() {
                       value={number}
                       onChange={(e) => setNumber(e.target.value.replace(/\D/g, ''))}
                       placeholder="ค้นหาเลขรางวัล..."
-                      className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold placeholder:text-slate-300"
+                      className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-4 focus:ring-logo-primary/10 transition-all font-bold placeholder:text-slate-300"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={loading || number.length !== 6}
-                    className="bg-emerald-500 text-white px-6 rounded-2xl font-black hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                    className="bg-logo-primary text-white px-6 rounded-2xl font-black hover:bg-logo-dark transition-all shadow-lg shadow-logo-primary/20 disabled:opacity-50"
                   >
                     {loading ? <RefreshCw className="h-5 w-5 animate-spin" /> : 'ค้นหา'}
                   </button>
@@ -262,7 +267,7 @@ export default function CheckResult() {
                           value={num}
                           onChange={(e) => updateNumber(index, e.target.value)}
                           placeholder={`ฉบับที่ ${index + 1}`}
-                          className="w-full bg-slate-50 border-none rounded-2xl py-3 px-6 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold placeholder:text-slate-300"
+                          className="w-full bg-slate-50 border-none rounded-2xl py-3 px-6 focus:ring-4 focus:ring-logo-primary/10 transition-all font-bold placeholder:text-slate-300"
                         />
                       </div>
                       {numbers.length > 1 && (
@@ -281,7 +286,7 @@ export default function CheckResult() {
                     <button
                       type="button"
                       onClick={addNumberField}
-                      className="w-full py-3 border-2 border-dashed border-slate-100 rounded-2xl text-slate-400 font-bold text-sm hover:border-emerald-200 hover:text-emerald-500 transition-all flex items-center justify-center space-x-2"
+                      className="w-full py-3 border-2 border-dashed border-slate-100 rounded-2xl text-slate-400 font-bold text-sm hover:border-logo-primary/40 hover:text-logo-primary transition-all flex items-center justify-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
                       <span>เพิ่มฉบับถัดไป</span>
@@ -291,7 +296,7 @@ export default function CheckResult() {
                   <button
                     type="submit"
                     disabled={loading || numbers.every(n => n.length !== 6)}
-                    className="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black text-lg hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center space-x-3"
+                    className="w-full bg-logo-primary text-white py-4 rounded-2xl font-black text-lg hover:bg-logo-dark transition-all shadow-lg shadow-logo-primary/20 disabled:opacity-50 flex items-center justify-center space-x-3"
                   >
                     {loading ? (
                       <RefreshCw className="h-6 w-6 animate-spin" />
@@ -321,10 +326,10 @@ export default function CheckResult() {
               className="space-y-8 pt-4 border-t border-slate-50"
             >
               <div className="text-center space-y-2">
-                <p className="text-xs font-black text-emerald-600 uppercase tracking-widest">
+                <p className="text-xs font-black text-logo-primary uppercase tracking-widest">
                   ผลรางวัลประจำงวดวันที่ {new Date(result.draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
-                <div className="text-7xl md:text-8xl font-black text-orange-500 tracking-tighter font-display">
+                <div className="text-4xl md:text-5xl font-black text-logo-primary tracking-tighter font-display">
                   {result.first_prize || number}
                 </div>
                 <div className="space-y-1">
@@ -349,9 +354,9 @@ export default function CheckResult() {
                   </div>
                   <div className="text-[10px] font-bold text-slate-400">฿ 4,000</div>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-2xl text-center space-y-1">
+                <div className="bg-logo-light/50 p-4 rounded-2xl text-center space-y-1">
                   <span className="text-[10px] font-black text-slate-400 uppercase">เลขท้าย 2 ตัว</span>
-                  <div className="text-xl font-black text-slate-900 mt-auto">
+                  <div className="text-xl font-black text-logo-primary mt-auto">
                     {result.last_two}
                   </div>
                   <div className="text-[10px] font-bold text-slate-400">฿ 2,000</div>
@@ -359,13 +364,13 @@ export default function CheckResult() {
               </div>
 
               {result.is_winner ? (
-                <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-center space-y-2">
+                <div className="bg-logo-light border border-logo-primary/20 p-6 rounded-[2rem] text-center space-y-2">
                   <div className="flex justify-center mb-2">
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                    <CheckCircle2 className="h-10 w-10 text-logo-primary" />
                   </div>
-                  <h3 className="text-2xl font-black text-emerald-900">ยินดีด้วย!</h3>
-                  <p className="text-emerald-700 font-bold">คุณถูกรางวัลสลากกินแบ่ง</p>
-                  <div className="text-3xl font-black text-emerald-600 mt-2">
+                  <h3 className="text-2xl font-black text-logo-dark">ยินดีด้วย!</h3>
+                  <p className="text-logo-primary font-bold">คุณถูกรางวัลสลากกินแบ่ง</p>
+                  <div className="text-3xl font-black text-logo-primary mt-2">
                     {new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(result.total_prize)}
                   </div>
                 </div>
@@ -382,7 +387,7 @@ export default function CheckResult() {
 
               <Link 
                 to="/previous"
-                className="block w-full py-4 border-2 border-emerald-100 rounded-2xl text-emerald-600 font-black text-sm hover:bg-emerald-50 transition-all text-center"
+                className="block w-full py-4 border-2 border-logo-primary/20 rounded-2xl text-logo-primary font-black text-sm hover:bg-logo-light transition-all text-center"
               >
                 ตรวจผลสลากงวดนี้ทั้งหมด
               </Link>
@@ -397,7 +402,7 @@ export default function CheckResult() {
             >
               <div className="flex justify-between items-end mb-4">
                 <h4 className="text-sm font-black text-slate-900">ผลการตรวจสอบ</h4>
-                <p className="text-[10px] font-bold text-emerald-600">
+                <p className="text-[10px] font-bold text-logo-primary">
                   งวดวันที่ {new Date(results[0].draw_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
@@ -406,7 +411,7 @@ export default function CheckResult() {
                   <div 
                     key={i}
                     className={`p-4 rounded-2xl flex items-center justify-between ${
-                      res.is_winner ? 'bg-emerald-50 border border-emerald-100' : 'bg-slate-50 border border-slate-100'
+                      res.is_winner ? 'bg-logo-light border border-logo-primary/20' : 'bg-slate-50 border border-slate-100'
                     }`}
                   >
                     <div className="flex items-center space-x-4">
@@ -414,14 +419,14 @@ export default function CheckResult() {
                         {res.number}
                       </div>
                       {res.is_winner && (
-                        <div className="bg-emerald-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">
+                        <div className="bg-logo-primary text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">
                           ถูกรางวัล
                         </div>
                       )}
                     </div>
                     <div className="text-right">
                       {res.is_winner ? (
-                        <div className="text-emerald-600 font-black">
+                        <div className="text-logo-primary font-black">
                           ฿ {new Intl.NumberFormat('th-TH').format(res.total_prize)}
                         </div>
                       ) : (
@@ -433,7 +438,7 @@ export default function CheckResult() {
               </div>
               
               {results.some(r => r.is_winner) && (
-                <div className="mt-6 p-6 bg-emerald-600 rounded-[2rem] text-white text-center shadow-xl shadow-emerald-600/20">
+                <div className="mt-6 p-6 bg-logo-primary rounded-[2rem] text-white text-center shadow-xl shadow-logo-primary/20">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70 mb-1">รวมเงินรางวัลทั้งหมด</p>
                   <p className="text-4xl font-black font-display">
                     ฿ {new Intl.NumberFormat('th-TH').format(results.reduce((sum, r) => sum + (r.total_prize || 0), 0))}
