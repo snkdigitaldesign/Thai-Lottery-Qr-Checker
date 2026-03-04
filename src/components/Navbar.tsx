@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
-import { LogOut, LogIn, Home, Search, History, Tv, Layers, Menu, X, LayoutDashboard } from 'lucide-react';
+import { LogOut, LogIn, Home, Search, History, Tv, Layers, Menu, X, LayoutDashboard, Shield } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -31,6 +31,7 @@ export default function Navbar() {
     { path: '/check?mode=multiple', icon: Layers, label: 'หลายใบ' },
     { path: '/live', icon: Tv, label: 'สด' },
     { path: '/previous', icon: History, label: 'ย้อนหลัง' },
+    { path: '/privacy', icon: Shield, label: 'นโยบาย' },
   ];
 
   return (
